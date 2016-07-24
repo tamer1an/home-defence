@@ -1,3 +1,5 @@
+"use strict";
+
 var Cylon = require('cylon');
 
 Cylon.robot({
@@ -6,12 +8,12 @@ Cylon.robot({
     },
 
     devices: {
-        led: {driver: 'led', pin: 8}
+        button: {driver: 'button', pin: 2}
     },
 
     work: function (my) {
-        every((1).second(), function () {
-            my.led.toggle();
+        my.button.on('push', function () {
+            console.log("Button pushed!");
         });
     }
 }).start();
