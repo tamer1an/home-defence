@@ -1,16 +1,17 @@
 "use strict";
 
-var Driver = require("./lib/ultrasonic");
+var Drivers = {
+  "ultrasonic": require("./lib/ultrasonic")
+};
 
 module.exports = {
-  // Drivers your module provides, e.g. ["ultrasonic", "button"]
-  drivers: [],
+  drivers: Object.keys(Drivers),
 
-  // Modules intended to be used with yours, e.g. ["cylon-gpio"]
-  dependencies: [],
+  driver: function(opts) {
+    if (Drivers[opts.driver]) {
+      return new Drivers[opts.driver](opts);
+    }
 
-
-  driver: function (opts) {
-    return new Driver(opts);
+    return null;
   }
 };

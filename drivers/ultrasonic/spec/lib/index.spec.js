@@ -5,33 +5,33 @@ var index = lib("../");
 var Adaptor = lib("adaptor"),
     Driver = lib("driver");
 
-describe("index", function () {
-  describe("#adaptors", function () {
-    it("is an array of supplied adaptors", function () {
+describe("index", function() {
+  describe("#adaptors", function() {
+    it("is an array of supplied adaptors", function() {
       expect(index.adaptors).to.be.eql([]);
     });
   });
 
-  describe("#drivers", function () {
-    it("is an array of supplied drivers", function () {
+  describe("#drivers", function() {
+    it("is an array of supplied drivers", function() {
       expect(index.drivers).to.be.eql([]);
     });
   });
 
-  describe("#dependencies", function () {
-    it("is an array of supplied dependencies", function () {
+  describe("#dependencies", function() {
+    it("is an array of supplied dependencies", function() {
       expect(index.dependencies).to.be.eql([]);
     });
   });
 
-  describe("#driver", function () {
-    it("returns an instance of the ultrasonic", function () {
+  describe("#driver", function() {
+    it("returns an instance of the Ultrasonic", function() {
       expect(index.driver()).to.be.instanceOf(Driver);
     });
   });
 
-  describe("#adaptor", function () {
-    it("returns an instance of the Adaptor", function () {
+  describe("#adaptor", function() {
+    it("returns an instance of the Adaptor", function() {
       expect(index.adaptor()).to.be.instanceOf(Adaptor);
     });
   });

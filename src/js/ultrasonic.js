@@ -1,7 +1,6 @@
 "use strict";
 
 var Cylon = require('cylon');
-var ultrasonic = require('ultrasonic');
 
 Cylon.robot({
   connections: {
@@ -13,10 +12,8 @@ Cylon.robot({
   },
 
   work: function (my) {
-
     every((1).seconds(), function () {
       console.log('doing');
-
     });
   }
 }).start();
