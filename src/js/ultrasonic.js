@@ -8,12 +8,14 @@ Cylon.robot({
   },
 
   devices: {
-    ultrasonic: {driver: 'ultrasonic', pin: 11, pin2: 10}
+    ultrasonic: {driver: 'hcsr04', pin: 11, pin2: 10}
   },
 
   work: function (my) {
-    every((1).seconds(), function () {
-      console.log('doing');
-    });
+    console.log('US work start');
+
+    // every((1).seconds(), function () {
+    //     console.log(my.ultrasonic.distance());
+    // });
   }
 }).start();
