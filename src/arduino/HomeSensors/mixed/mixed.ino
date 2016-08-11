@@ -1,3 +1,12 @@
+//int soundDetectedPin = 10;    // Use Pin 10 as our Input
+//int soundDetectedVal = HIGH; // This is where we record our Sound Measurement
+//boolean bAlarm = false;
+//
+//unsigned long lastSoundDetectTime; // Record the time that we measured a sound
+//
+//int soundAlarmTime = 500; // Number of milli seconds to keep the sound alarm high
+
+
 /*
  * For more information, see http://arduino.cc/en/Tutorial/Tone
 */
@@ -39,12 +48,14 @@ void setup() {
   // pinMode(LEDPin, OUTPUT); // Use LED indicator (if required)
   pinMode(inputPin, INPUT);    // declare IR sensor as input
   pinMode(buzzerPin, OUTPUT);
+//  pinMode (soundDetectedPin, INPUT); // input from the Sound Detection Module
 
   delay(30000); //30seconds delay before start
 }
 
 void loop() {
-  /* The following trigPin/echoPin cycle is used to determine the
+  /*  UltraSonic Sensor
+   *  The following trigPin/echoPin cycle is used to determine the
     distance of the nearest object by bouncing soundwaves off of it. */
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -68,9 +79,8 @@ void loop() {
       turn LED OFF to indicate successful reading. */
     Serial.println(distance);
 
-    
-    if(distance > 3 && distance < 50){
-       tone(buzzerPin, 349, 200);
+    if(distance > 3 && distance < 90){
+       tone(buzzerPin, 349, 200); //{262, 294, 330, 349, 392, 440, 494, 523};
     } else {
       noTone(buzzerPin);
     }
@@ -85,8 +95,8 @@ void loop() {
     if (pirState == LOW) {
       // we have just turned on
       Serial.println("Motion detected!");
-      analogWrite(9, 1);
-      delay(40);
+      analogWrite(9, 240);
+      delay(7000);
       // We only want to print on the output change, not state
       pirState = HIGH;
     }
@@ -100,6 +110,27 @@ void loop() {
       pirState = LOW;
     }
   }
+
+//  // SoundSensor
+//  soundDetectedVal = digitalRead(soundDetectedPin); // read the sound alarm time
+//  //Serial.println(millis());
+//  
+//  if (soundDetectedVal == LOW) // If we hear a sound
+//  {
+//    lastSoundDetectTime = millis(); // record the time of the sound alarm
+//    // The following is so you don't scroll on the output screen
+//    if (!bAlarm){
+//      Serial.println("LOUD, LOUD");
+//      bAlarm = true;
+//    }
+//  }
+//  else
+//  {
+//    if( (millis()-lastSoundDetectTime) > soundAlarmTime  &&  bAlarm){
+//      Serial.println("quiet");
+//      bAlarm = false;
+//    }
+//  }
 
   //Delay 50ms before next reading.
   delay(50);
