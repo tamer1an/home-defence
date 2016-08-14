@@ -24,7 +24,7 @@ int val = 0;                    // variable for reading the pin status
 //US sensor
 #define echoPin 7 // Echo Pin
 #define trigPin 8 // Trigger Pin
-
+#define piPin 6 // Trigger Pin
 
 //#define ledPin 13 // Onboard LED
 
@@ -70,9 +70,9 @@ void loop() {
     Serial.println(distance);
 
     if(distance > 3 && distance < 90){
-       tone(buzzerPin, 349, 200); //{262, 294, 330, 349, 392, 440, 494, 523};
+     //  tone(buzzerPin, 349, 200); //{262, 294, 330, 349, 392, 440, 494, 523};
     } else {
-      noTone(buzzerPin);
+    //  noTone(buzzerPin);
     }
     
     // digitalWrite(ledPin, LOW);
@@ -87,7 +87,7 @@ void loop() {
       // we have just turned on
       Serial.println("Motion detected!");
 //      analogWrite(buzzerPin, 240);
-      delay(7000);
+   //   delay(7000);
       // We only want to print on the output change, not state
       pirState = HIGH;
     }
