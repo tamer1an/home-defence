@@ -1,10 +1,12 @@
 #include <IRremote.h>
 
+/* LOGIC SWITCH */
+int POWER = 1;
+
 /* IR remote Sensor */
 int RECV_PIN = 11;
 IRrecv irrecv(RECV_PIN);
 decode_results results;
-
 
 /* RGB LED */
 const int RED_PIN = 4;
@@ -34,10 +36,11 @@ int maximumRange = 200;         // Maximum range needed
 int minimumRange = 0;           // Minimum range needed
 long duration, distance;        // Duration used to calculate distance
 
+
 /* PIR SENSOR */
-void motionDetect(){
-  PIRval = digitalRead(inputPin); 
-  if (PIRval == HIGH) {            
+void motionDetect() {
+  PIRval = digitalRead(inputPin);
+  if (PIRval == HIGH) {
     if (pirState == LOW) {
       pirState = HIGH;
       digitalWrite(piPin, HIGH);
@@ -50,9 +53,9 @@ void motionDetect(){
   }
 }
 
-/*  UltraSonic Sensor */
-void ultraSonic(){ 
 
+/*  UltraSonic Sensor */
+void ultraSonic() {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
 
@@ -64,27 +67,33 @@ void ultraSonic(){
   distance = duration / 58.2;
 
   if (distance >= maximumRange || distance <= minimumRange) {
+    //    Serial.println("-1");
     digitalWrite(piPin, LOW);
-  } else {  
-    digitalWrite(piPin, HIGH);  
+  } else {
+    if (distance > 3 && distance < 150) {
+      digitalWrite(piPin, HIGH);
+    } else {
+      digitalWrite(piPin, LOW);
+    }
   }
+
 }
 
 
 void setup() {
   Serial.begin(9600);
-//  Serial.flush();
+  //  Serial.flush();
 
   pinMode(RED_PIN, OUTPUT);
-//  pinMode(GREEN_PIN, OUTPUT);
+  //  pinMode(GREEN_PIN, OUTPUT);
   pinMode(BLUE_PIN, OUTPUT);
-  
+
   /* configure input to interrupt sound sensor */
   pinMode(PIN_GATE_IN, INPUT);
   attachInterrupt(IRQ_GATE_IN, soundISR, CHANGE);
 
   /* Pi PC */
-  pinMode(piPin, OUTPUT); 
+  pinMode(piPin, OUTPUT);
 
   /* Sound Buzzer */
   pinMode(buzzerPin, OUTPUT);
@@ -94,37 +103,51 @@ void setup() {
   pinMode(echoPin, INPUT);
 
   /* PIR sensor */
-  pinMode(inputPin, INPUT);  
+  pinMode(inputPin, INPUT);
 
   /* IR Remote */
   irrecv.enableIRIn(); // Start the receiver
 
-  delay(7000);
-  digitalWrite(BLUE_PIN, "HIGH"); 
+  delay(5000);
 }
 
 
-void soundISR()
-{
-  if(digitalRead(PIN_GATE_IN) == 1){
-    //digitalWrite(GREEN_PIN, "HIGH"); 
-    //digitalWrite(piPin, "HIGH"); 
-      Serial.print("gate : 1");
-  } else {
-    //digitalWrite(piPin, "LOW"); 
-    Serial.print("gate : 2");
+void soundISR() {
+    if(digitalRead(PIN_GATE_IN) == 1){
+      digitalWrite(piPin, HIGH);
+    } else {
+      digitalWrite(piPin, LOW);
+    }  
+}
+
+
+void remote() {
+  if (irrecv.decode(&results)) {
+    //    Serial.println(results.value);
+
+    if (results.value == 16580863 && POWER == 1) {
+      POWER = 0;
+      digitalWrite(BLUE_PIN, LOW);
+    } else {
+      POWER = 1;
+      digitalWrite(RED_PIN, LOW);
+    }
+    irrecv.resume(); // Receive the next value
   }
 }
 
 
 void loop() {
-  ultraSonic();
-  motionDetect();
+  remote();
 
-  if (irrecv.decode(&results)) {
-    Serial.println(results.value, HEX);
-    irrecv.resume(); // Receive the next value
+  if (POWER) {
+    digitalWrite(BLUE_PIN, HIGH);
+    ultraSonic();
+    motionDetect();
+  } else {
+    digitalWrite(RED_PIN, HIGH);
   }
 
-  delay(100);
+  delay(30);
 }
+
