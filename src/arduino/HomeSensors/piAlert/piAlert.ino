@@ -43,7 +43,9 @@ void motionDetect() {
   if (PIRval == HIGH) {
     if (pirState == LOW) {
       pirState = HIGH;
+      Serial.println("MOTION");
       digitalWrite(piPin, HIGH);
+      delay(2000);
     }
   } else {
     if (pirState == HIGH) {
@@ -71,6 +73,7 @@ void ultraSonic() {
     digitalWrite(piPin, LOW);
   } else {
     if (distance > 3 && distance < 150) {
+      Serial.println("US");
       digitalWrite(piPin, HIGH);
     } else {
       digitalWrite(piPin, LOW);
@@ -82,7 +85,7 @@ void ultraSonic() {
 
 void setup() {
   Serial.begin(9600);
-  //  Serial.flush();
+//  Serial.flush();
 
   pinMode(RED_PIN, OUTPUT);
   //  pinMode(GREEN_PIN, OUTPUT);
@@ -113,11 +116,14 @@ void setup() {
 
 
 void soundISR() {
+    Serial.println("SOUND");
+  
     if(digitalRead(PIN_GATE_IN) == 1){
       digitalWrite(piPin, HIGH);
     } else {
       digitalWrite(piPin, LOW);
     }  
+    digitalWrite(piPin, HIGH);
 }
 
 
