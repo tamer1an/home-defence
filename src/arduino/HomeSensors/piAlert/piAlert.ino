@@ -43,7 +43,7 @@ void motionDetect() {
   if (PIRval == HIGH) {
     if (pirState == LOW) {
       pirState = HIGH;
-      Serial.println("MOTION");
+//      Serial.println("MOTION");
       digitalWrite(piPin, HIGH);
       delay(2000);
     }
@@ -73,7 +73,7 @@ void ultraSonic() {
     digitalWrite(piPin, LOW);
   } else {
     if (distance > 3 && distance < 150) {
-      Serial.println("US");
+//      Serial.println("US");
       digitalWrite(piPin, HIGH);
     } else {
       digitalWrite(piPin, LOW);
@@ -84,7 +84,7 @@ void ultraSonic() {
 
 
 void setup() {
-  Serial.begin(9600);
+//  Serial.begin(9600);
 //  Serial.flush();
 
   pinMode(RED_PIN, OUTPUT);
@@ -116,7 +116,7 @@ void setup() {
 
 
 void soundISR() {
-    Serial.println("SOUND");
+//    Serial.println("SOUND");
   
     if(digitalRead(PIN_GATE_IN) == 1){
       digitalWrite(piPin, HIGH);
@@ -157,3 +157,48 @@ void loop() {
   delay(30);
 }
 
+
+/*
+ * 1
+FFA25D
+2
+FF629D
+3
+FFE21D
+4
+FF22DD
+5
+FF02FD
+6
+FFC23D
+7
+FFE01F
+8
+FFA857
+9
+FF906F
+10
+FF6897
+11
+FF9867
+12
+FFB04F
+13
+FF30CF
+14
+FF18E7
+15
+FF7A85
+16
+FF10EF
+17
+FF38C7
+18
+FF5AA5
+19
+FF42BD
+20
+FF4AB5
+21
+FF52AD
+ */
