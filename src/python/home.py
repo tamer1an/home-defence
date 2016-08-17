@@ -14,7 +14,9 @@ toaddrs  = '......@gmail.com'
 username = '......@gmail.com'
 password = '......'
 server = smtplib.SMTP('smtp.gmail.com:587')
-msg = MIMEMultipart() 
+
+server.starttls()
+server.login(username,password)
 
 pin = 7
 
@@ -26,22 +28,21 @@ GPIO.setup(pin,GPIO.IN)
 
 while True:
     if GPIO.input(pin) == GPIO.HIGH:
-        print('INTRUDER ALERT')          
+        print('INTRUDER ALERT')            
         camera.capture('/home/pi/alarm/image.jpg')    
-
+                
         #prepare email
+	msg = MIMEMultipart()
+        formatdate(localtime = True)
         body = 'INTRUDER ALERT!'
         msg['Date'] = formatdate(localtime = True)
-        msg['Subject'] = body
+        msg['Subject'] = body +' '+ formatdate(localtime = True)
         content = MIMEText(body, 'plain')
         msg.attach(content)
-        msg.attach(MIMEImage(file("image.jpg").read()))      
-        
-        #send email
-        server.starttls()
-        server.login(username,password)
-        server.sendmail(fromaddr, toaddrs, msg.as_string())
-        server.quit()     
+        msg.attach(MIMEImage(file("image.jpg").read()))
+               
+        #send email      
+        server.sendmail(fromaddr, toaddrs, msg.as_string())            
         
     else:
         print('NO ALERT')
@@ -49,3 +50,4 @@ while True:
     time.sleep(2)
     
 GPIO.cleanup()
+server.quit()

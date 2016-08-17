@@ -43,14 +43,15 @@ void motionDetect() {
   if (PIRval == HIGH) {
     if (pirState == LOW) {
       pirState = HIGH;
-//      Serial.println("MOTION");
+//      Serial.println("MOTION start");
       digitalWrite(piPin, HIGH);
       delay(2000);
+      digitalWrite(piPin, LOW);
     }
   } else {
     if (pirState == HIGH) {
+//      Serial.println("MOTION end");
       pirState = LOW;
-      digitalWrite(piPin, LOW);
     }
   }
 }
@@ -69,17 +70,17 @@ void ultraSonic() {
   distance = duration / 58.2;
 
   if (distance >= maximumRange || distance <= minimumRange) {
-    //    Serial.println("-1");
-    digitalWrite(piPin, LOW);
+//    Serial.println("US = -1");
   } else {
     if (distance > 3 && distance < 150) {
 //      Serial.println("US");
       digitalWrite(piPin, HIGH);
-    } else {
+      delay(2000);
       digitalWrite(piPin, LOW);
+    } else {
+
     }
   }
-
 }
 
 
@@ -111,30 +112,28 @@ void setup() {
   /* IR Remote */
   irrecv.enableIRIn(); // Start the receiver
 
-  delay(5000);
+  delay(1000);
 }
 
 
 void soundISR() {
-//    Serial.println("SOUND");
-  
-    if(digitalRead(PIN_GATE_IN) == 1){
+    if (POWER == 1){
+//      Serial.println("SOUND");
       digitalWrite(piPin, HIGH);
-    } else {
+      delay(2000);
       digitalWrite(piPin, LOW);
-    }  
-    digitalWrite(piPin, HIGH);
+    }     
 }
 
 
 void remote() {
   if (irrecv.decode(&results)) {
-    //    Serial.println(results.value);
+//    Serial.println(results.value);
 
     if (results.value == 16580863 && POWER == 1) {
       POWER = 0;
       digitalWrite(BLUE_PIN, LOW);
-    } else {
+    } else if (results.value == 16580863) {
       POWER = 1;
       digitalWrite(RED_PIN, LOW);
     }
@@ -145,6 +144,8 @@ void remote() {
 
 void loop() {
   remote();
+//  Serial.print("POWER ");
+//  Serial.println(POWER);
 
   if (POWER) {
     digitalWrite(BLUE_PIN, HIGH);
@@ -154,7 +155,7 @@ void loop() {
     digitalWrite(RED_PIN, HIGH);
   }
 
-  delay(30);
+  delay(100);
 }
 
 
