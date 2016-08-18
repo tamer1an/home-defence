@@ -44,9 +44,7 @@ void motionDetect() {
     if (pirState == LOW) {
       pirState = HIGH;
 //      Serial.println("MOTION start");
-      digitalWrite(piPin, HIGH);
-      delay(2000);
-      digitalWrite(piPin, LOW);
+      alarm();
     }
   } else {
     if (pirState == HIGH) {
@@ -71,18 +69,23 @@ void ultraSonic() {
 
   if (distance >= maximumRange || distance <= minimumRange) {
 //    Serial.println("US = -1");
+//    digitalWrite(piPin, LOW);
   } else {
     if (distance > 3 && distance < 150) {
 //      Serial.println("US");
-      digitalWrite(piPin, HIGH);
-      delay(2000);
-      digitalWrite(piPin, LOW);
+        alarm();
     } else {
-
+      
     }
   }
 }
 
+void alarm() {
+//  Serial.println("ALARM 1");
+  digitalWrite(piPin, HIGH);
+  delay(2000);
+  digitalWrite(piPin, LOW);
+}
 
 void setup() {
 //  Serial.begin(9600);
@@ -119,9 +122,7 @@ void setup() {
 void soundISR() {
     if (POWER == 1){
 //      Serial.println("SOUND");
-      digitalWrite(piPin, HIGH);
-      delay(2000);
-      digitalWrite(piPin, LOW);
+      alarm();
     }     
 }
 
