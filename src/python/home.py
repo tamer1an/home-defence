@@ -32,7 +32,7 @@ while True:
         camera.capture('/home/pi/alarm/image.jpg')    
                 
         #prepare email
-	msg = MIMEMultipart()
+        msg = MIMEMultipart()
         formatdate(localtime = True)
         body = 'INTRUDER ALERT!'
         msg['Date'] = formatdate(localtime = True)

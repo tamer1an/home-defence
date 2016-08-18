@@ -145,8 +145,6 @@ void remote() {
 
 void loop() {
   remote();
-//  Serial.print("POWER ");
-//  Serial.println(POWER);
 
   if (POWER) {
     digitalWrite(BLUE_PIN, HIGH);
