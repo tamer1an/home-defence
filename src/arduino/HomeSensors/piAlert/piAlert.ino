@@ -2,6 +2,8 @@
 
 /* LOGIC SWITCH */
 int POWER = 1;
+int POWER_US = 0;
+int currentLed;
 
 /* IR remote Sensor */
 int RECV_PIN = 11;
@@ -43,12 +45,12 @@ void motionDetect() {
   if (PIRval == HIGH) {
     if (pirState == LOW) {
       pirState = HIGH;
-//      Serial.println("MOTION start");
+      Serial.println("MOTION start");
       alarm();
     }
   } else {
     if (pirState == HIGH) {
-//      Serial.println("MOTION end");
+      Serial.println("MOTION end");
       pirState = LOW;
     }
   }
@@ -57,6 +59,11 @@ void motionDetect() {
 
 /*  UltraSonic Sensor */
 void ultraSonic() {
+
+  if (!POWER_US ){
+    return;
+  }
+  
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
 
@@ -71,8 +78,8 @@ void ultraSonic() {
 //    Serial.println("US = -1");
 //    digitalWrite(piPin, LOW);
   } else {
-    if (distance > 3 && distance < 150) {
-//      Serial.println("US");
+    if (distance > 3 && distance < 100) {
+      Serial.println("US");
         alarm();
     } else {
       
@@ -81,15 +88,15 @@ void ultraSonic() {
 }
 
 void alarm() {
-//  Serial.println("ALARM 1");
+  Serial.println("ALARM 1");
   digitalWrite(piPin, HIGH);
   delay(2000);
   digitalWrite(piPin, LOW);
 }
 
 void setup() {
-//  Serial.begin(9600);
-//  Serial.flush();
+  Serial.begin(9600);
+  Serial.flush();
 
   pinMode(RED_PIN, OUTPUT);
   //  pinMode(GREEN_PIN, OUTPUT);
@@ -115,29 +122,44 @@ void setup() {
   /* IR Remote */
   irrecv.enableIRIn(); // Start the receiver
 
-  delay(1000);
+  currentLed = BLUE_PIN;
 }
 
 
 void soundISR() {
     if (POWER == 1){
-//      Serial.println("SOUND");
-      alarm();
+      Serial.println("SOUND");
+//      alarm();
+
+
+//      digitalWrite(piPin, HIGH);
+//      delay(2000);
+//      digitalWrite(piPin, LOW);
+
+      
     }     
 }
 
 
 void remote() {
   if (irrecv.decode(&results)) {
-//    Serial.println(results.value);
+    Serial.println(results.value);
 
     if (results.value == 16580863 && POWER == 1) {
       POWER = 0;
-      digitalWrite(BLUE_PIN, LOW);
+      currentLed = BLUE_PIN;
     } else if (results.value == 16580863) {
       POWER = 1;
-      digitalWrite(RED_PIN, LOW);
+      currentLed = RED_PIN;    
     }
+
+    if (results.value == 16593103 && POWER_US == 1) {
+      POWER_US = 0;
+    } else if (results.value == 16593103) {
+      POWER_US = 1;   
+    }
+    
+    digitalWrite(currentLed, LOW);       
     irrecv.resume(); // Receive the next value
   }
 }
@@ -147,58 +169,20 @@ void loop() {
   remote();
 
   if (POWER) {
-    digitalWrite(BLUE_PIN, HIGH);
+    currentLed = BLUE_PIN;
     ultraSonic();
     motionDetect();
   } else {
-    digitalWrite(RED_PIN, HIGH);
+    currentLed = RED_PIN;    
   }
+  
+  digitalWrite(currentLed, HIGH);  
 
+  if (!POWER_US){
+    digitalWrite(currentLed, LOW);  
+    delay(200);
+    digitalWrite(currentLed, HIGH);  
+  }
+  
   delay(100);
 }
-
-
-/*
- * 1
-FFA25D
-2
-FF629D
-3
-FFE21D
-4
-FF22DD
-5
-FF02FD
-6
-FFC23D
-7
-FFE01F
-8
-FFA857
-9
-FF906F
-10
-FF6897
-11
-FF9867
-12
-FFB04F
-13
-FF30CF
-14
-FF18E7
-15
-FF7A85
-16
-FF10EF
-17
-FF38C7
-18
-FF5AA5
-19
-FF42BD
-20
-FF4AB5
-21
-FF52AD
- */
