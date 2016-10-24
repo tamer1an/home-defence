@@ -26,36 +26,12 @@ const int BLUE_PIN = 10;
 /* Sound Buzzer */
 #define buzzerPin 12            // BUZZER
 
-/* PIR sensor */
-#define inputPin  9             // choose the input pin (for PIR sensor)
-int pirState = LOW;             // we start, assuming no motion detected
-int PIRval = 0;                    // variable for reading the pin status
-
 /* US sensor */
 #define echoPin 7               // Echo Pin
 #define trigPin 8               // Trigger Pin
 int maximumRange = 200;         // Maximum range needed
 int minimumRange = 0;           // Minimum range needed
 long duration, distance;        // Duration used to calculate distance
-
-
-/* PIR SENSOR */
-void motionDetect() {
-  PIRval = digitalRead(inputPin);
-  if (PIRval == HIGH) {
-    if (pirState == LOW) {
-      pirState = HIGH;
-      Serial.println("MOTION start");
-      alarm();
-    }
-  } else {
-    if (pirState == HIGH) {
-      Serial.println("MOTION end");
-      pirState = LOW;
-    }
-  }
-}
-
 
 /*  UltraSonic Sensor */
 void ultraSonic() {
@@ -80,7 +56,7 @@ void ultraSonic() {
   } else {
     if (distance > 3 && distance < 100) {
       Serial.println("US");
-        alarm();
+//        alarm();
     } else {
       
     }
@@ -93,6 +69,8 @@ void alarm() {
   delay(2000);
   digitalWrite(piPin, LOW);
 }
+
+int sensorValue; // air sensor
 
 void setup() {
   Serial.begin(9600);
@@ -116,9 +94,6 @@ void setup() {
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
 
-  /* PIR sensor */
-  pinMode(inputPin, INPUT);
-
   /* IR Remote */
   irrecv.enableIRIn(); // Start the receiver
 
@@ -128,15 +103,13 @@ void setup() {
 
 void soundISR() {
     if (POWER == 1){
-      Serial.println("SOUND");
+//      Serial.println("SOUND");
 //      alarm();
 
 
 //      digitalWrite(piPin, HIGH);
 //      delay(2000);
 //      digitalWrite(piPin, LOW);
-
-      
     }     
 }
 
@@ -166,12 +139,15 @@ void remote() {
 
 
 void loop() {
+  sensorValue = analogRead(5);       // read analog input pin 5
+  Serial.println(sensorValue, DEC);  // prints the value read
+  delay(100);                        // wait 100ms for next reading
+
   remote();
 
   if (POWER) {
     currentLed = BLUE_PIN;
     ultraSonic();
-    motionDetect();
   } else {
     currentLed = RED_PIN;    
   }
