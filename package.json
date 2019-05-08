@@ -9,7 +9,12 @@
     "cylon-gpio": "^0.29.0",
     "cylon-i2c": "^0.26.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-fileupload": "^1.1.4",
+    "http-proxy": "^1.17.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
